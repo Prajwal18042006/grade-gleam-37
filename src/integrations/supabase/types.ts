@@ -14,7 +14,145 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      courses: {
+        Row: {
+          course_code: string
+          course_name: string
+          created_at: string
+          credits: number
+          department: string
+          id: string
+          semester: number
+        }
+        Insert: {
+          course_code: string
+          course_name: string
+          created_at?: string
+          credits?: number
+          department: string
+          id?: string
+          semester: number
+        }
+        Update: {
+          course_code?: string
+          course_name?: string
+          created_at?: string
+          credits?: number
+          department?: string
+          id?: string
+          semester?: number
+        }
+        Relationships: []
+      }
+      marks: {
+        Row: {
+          academic_year: string
+          course_id: string
+          created_at: string
+          external_marks: number | null
+          faculty_id: string | null
+          grade: string | null
+          grade_points: number | null
+          id: string
+          internal_marks: number | null
+          student_id: string
+          total_marks: number | null
+          updated_at: string
+        }
+        Insert: {
+          academic_year: string
+          course_id: string
+          created_at?: string
+          external_marks?: number | null
+          faculty_id?: string | null
+          grade?: string | null
+          grade_points?: number | null
+          id?: string
+          internal_marks?: number | null
+          student_id: string
+          total_marks?: number | null
+          updated_at?: string
+        }
+        Update: {
+          academic_year?: string
+          course_id?: string
+          created_at?: string
+          external_marks?: number | null
+          faculty_id?: string | null
+          grade?: string | null
+          grade_points?: number | null
+          id?: string
+          internal_marks?: number | null
+          student_id?: string
+          total_marks?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marks_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marks_faculty_id_fkey"
+            columns: ["faculty_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "marks_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          course: string | null
+          created_at: string
+          department: string | null
+          employee_id: string | null
+          full_name: string
+          id: string
+          role: string
+          roll_number: string | null
+          semester: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course?: string | null
+          created_at?: string
+          department?: string | null
+          employee_id?: string | null
+          full_name: string
+          id?: string
+          role: string
+          roll_number?: string | null
+          semester?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course?: string | null
+          created_at?: string
+          department?: string | null
+          employee_id?: string | null
+          full_name?: string
+          id?: string
+          role?: string
+          roll_number?: string | null
+          semester?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
