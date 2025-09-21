@@ -1,41 +1,25 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  // Configuration for the development server
+export default defineConfig(({ mode }) => ({
   server: {
-    // This allows the server to be accessible from other machines on the network.
-    // This is crucial for deployment on a containerized service like Render.
-    host: "0.0.0.0",
+    host: "::",
     port: 8080,
+    // Add this line to allow your Render URL
+    allowedHosts: ['grade-gleam.onrender.com'],
   },
-
-  // This is used for the production preview server.
-  // It ensures the production build is accessible after deployment.
+  // Add the preview configuration to also allow the host in production
   preview: {
-    host: true,
     port: 8080,
+    allowedHosts: ['grade-gleam.onrender.com'],
   },
-
-  // List of Vite plugins to use
-  plugins: [
-    // Official Vite plugin for React, using SWC for faster compilation
-    react(),
-  ],
-
-  // Configuration for path aliases
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
-      // Allows you to use '@' as an alias for the 'src' directory
-      // For example, `import Component from '@/components/Component'`
       "@": path.resolve(__dirname, "./src"),
     },
   },
-
-  // Specifies the output directory for the production build
-  build: {
-    outDir: "dist",
-  },
-});
+}));
