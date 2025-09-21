@@ -69,22 +69,22 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
       <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/80"></div>
       <Card className="w-full max-w-md animate-fade-in hover-scale relative z-10 backdrop-blur-xl bg-black/40 border border-white/10 shadow-2xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
-            <GraduationCap className="h-6 w-6 text-primary" />
+          <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2 text-white drop-shadow-lg">
+            <GraduationCap className="h-6 w-6 text-white drop-shadow-lg" />
             Student Result Portal
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-gray-200 drop-shadow-md">
             Access your academic results and grades
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="student" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="student" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-2 bg-white/10 border border-white/20">
+              <TabsTrigger value="student" className="flex items-center gap-2 text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">
                 <GraduationCap className="h-4 w-4" />
                 Student
               </TabsTrigger>
-              <TabsTrigger value="faculty" className="flex items-center gap-2">
+              <TabsTrigger value="faculty" className="flex items-center gap-2 text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">
                 <Users className="h-4 w-4" />
                 Faculty
               </TabsTrigger>
@@ -92,26 +92,28 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
             
             <TabsContent value="student" className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="student-email">Email</Label>
+                <Label htmlFor="student-email" className="text-white font-medium drop-shadow-md">Email</Label>
                 <Input
                   id="student-email"
                   type="email"
                   placeholder="student@university.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-300"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="student-password">Password</Label>
+                <Label htmlFor="student-password" className="text-white font-medium drop-shadow-md">Password</Label>
                 <Input
                   id="student-password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-300"
                 />
               </div>
               <Button 
-                className="w-full" 
+                className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30 font-semibold drop-shadow-lg" 
                 onClick={() => handleSubmit('student')}
                 disabled={isLoading}
               >
@@ -121,26 +123,28 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
             
             <TabsContent value="faculty" className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="faculty-email">Email</Label>
+                <Label htmlFor="faculty-email" className="text-white font-medium drop-shadow-md">Email</Label>
                 <Input
                   id="faculty-email"
                   type="email"
                   placeholder="faculty@university.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-300"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="faculty-password">Password</Label>
+                <Label htmlFor="faculty-password" className="text-white font-medium drop-shadow-md">Password</Label>
                 <Input
                   id="faculty-password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-300"
                 />
               </div>
               <Button 
-                className="w-full" 
+                className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30 font-semibold drop-shadow-lg" 
                 onClick={() => handleSubmit('faculty')}
                 disabled={isLoading}
               >
