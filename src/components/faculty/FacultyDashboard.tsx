@@ -112,79 +112,82 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/10 to-cyan-900/20"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-cyan-400/10"></div>
+      
       {/* Header */}
-      <header className="bg-card border-b px-6 py-4">
+      <header className="bg-black/40 backdrop-blur-xl border-b border-white/10 px-6 py-4 relative z-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Users className="h-8 w-8 text-primary" />
+            <Users className="h-8 w-8 text-white drop-shadow-lg" />
             <div>
-              <h1 className="text-2xl font-bold">Faculty Portal</h1>
-              <p className="text-muted-foreground">Welcome back, {user.name}</p>
+              <h1 className="text-2xl font-bold text-white drop-shadow-lg">Faculty Portal</h1>
+              <p className="text-gray-200 drop-shadow-md">Welcome back, {user.name}</p>
             </div>
           </div>
-          <Button variant="outline" onClick={onLogout}>
+          <Button variant="outline" onClick={onLogout} className="bg-white/10 border-white/20 text-white hover:bg-white/20 font-semibold">
             Logout
           </Button>
         </div>
       </header>
 
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto p-6 space-y-6 relative z-10">
         {/* Faculty Info */}
-        <Card className="animate-fade-in">
+        <Card className="animate-fade-in hover-scale bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-accent" />
+            <CardTitle className="flex items-center gap-2 text-white drop-shadow-lg">
+              <BookOpen className="h-5 w-5 text-cyan-400 drop-shadow-lg" />
               Faculty Information
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
-                <div className="text-xl font-bold text-primary">{user.employeeId}</div>
-                <div className="text-sm text-muted-foreground">Employee ID</div>
+                <div className="text-xl font-bold text-cyan-400 drop-shadow-lg">{user.employeeId}</div>
+                <div className="text-sm text-gray-300">Employee ID</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-primary">{user.department}</div>
-                <div className="text-sm text-muted-foreground">Department</div>
+                <div className="text-xl font-bold text-cyan-400 drop-shadow-lg">{user.department}</div>
+                <div className="text-sm text-gray-300">Department</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-success">{studentResults.length}</div>
-                <div className="text-sm text-muted-foreground">Results Submitted</div>
+                <div className="text-xl font-bold text-green-400 drop-shadow-lg">{studentResults.length}</div>
+                <div className="text-sm text-gray-300">Results Submitted</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Tabs defaultValue="add-results" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="add-results">Add Results</TabsTrigger>
-            <TabsTrigger value="view-results">View Results</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-xl border border-white/20">
+            <TabsTrigger value="add-results" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">Add Results</TabsTrigger>
+            <TabsTrigger value="view-results" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">View Results</TabsTrigger>
+            <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">Analytics</TabsTrigger>
           </TabsList>
 
           <TabsContent value="add-results" className="space-y-6">
-            <Card className="animate-fade-in">
+            <Card className="animate-fade-in hover-scale bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PlusCircle className="h-5 w-5 text-primary" />
+                <CardTitle className="flex items-center gap-2 text-white drop-shadow-lg">
+                  <PlusCircle className="h-5 w-5 text-cyan-400 drop-shadow-lg" />
                   Submit Student Results
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-gray-300">
                   Add marks and grades for your students
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Subject</Label>
+                    <Label className="text-white font-medium drop-shadow-md">Subject</Label>
                     <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
                         <SelectValue placeholder="Select subject" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-black/90 backdrop-blur-xl border-white/20">
                         {mockSubjects.map(subject => (
-                          <SelectItem key={subject.id} value={subject.id}>
+                          <SelectItem key={subject.id} value={subject.id} className="text-white hover:bg-white/10">
                             {subject.name} ({subject.credits} credits)
                           </SelectItem>
                         ))}
@@ -193,14 +196,14 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Student</Label>
+                    <Label className="text-white font-medium drop-shadow-md">Student</Label>
                     <Select value={selectedStudent} onValueChange={setSelectedStudent}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
                         <SelectValue placeholder="Select student" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-black/90 backdrop-blur-xl border-white/20">
                         {mockStudents.map(student => (
-                          <SelectItem key={student.id} value={student.id}>
+                          <SelectItem key={student.id} value={student.id} className="text-white hover:bg-white/10">
                             {student.rollNumber} - {student.name}
                           </SelectItem>
                         ))}
@@ -209,7 +212,7 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Marks (out of 100)</Label>
+                    <Label className="text-white font-medium drop-shadow-md">Marks (out of 100)</Label>
                     <Input
                       type="number"
                       placeholder="Enter marks"
@@ -217,18 +220,19 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
                       onChange={(e) => handleMarksChange(e.target.value)}
                       min="0"
                       max="100"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-300"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Grade</Label>
+                    <Label className="text-white font-medium drop-shadow-md">Grade</Label>
                     <Select value={selectedGrade} onValueChange={setSelectedGrade}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
                         <SelectValue placeholder="Auto-calculated" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-black/90 backdrop-blur-xl border-white/20">
                         {Object.keys(gradePoints).map(grade => (
-                          <SelectItem key={grade} value={grade}>
+                          <SelectItem key={grade} value={grade} className="text-white hover:bg-white/10">
                             {grade} ({gradePoints[grade as keyof typeof gradePoints]} points)
                           </SelectItem>
                         ))}
@@ -237,7 +241,7 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
                   </div>
                 </div>
 
-                <Button onClick={handleSubmitResult} className="w-full">
+                <Button onClick={handleSubmitResult} className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30 font-semibold drop-shadow-lg">
                   <Save className="h-4 w-4 mr-2" />
                   Submit Result
                 </Button>
@@ -246,34 +250,34 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
           </TabsContent>
 
           <TabsContent value="view-results" className="space-y-6">
-            <Card className="animate-fade-in">
+            <Card className="animate-fade-in hover-scale bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileSpreadsheet className="h-5 w-5 text-accent" />
+                <CardTitle className="flex items-center gap-2 text-white drop-shadow-lg">
+                  <FileSpreadsheet className="h-5 w-5 text-purple-400 drop-shadow-lg" />
                   Submitted Results
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {studentResults.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
+                  <div className="text-center py-8 text-gray-300">
                     No results submitted yet. Add some results to see them here.
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {studentResults.map((result) => (
-                      <div key={result.id} className="flex items-center justify-between p-4 border rounded-lg bg-card">
+                      <div key={result.id} className="flex items-center justify-between p-4 border border-white/20 rounded-lg bg-white/10 backdrop-blur-xl">
                         <div className="flex-1">
-                          <div className="font-medium">{result.studentName}</div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="font-medium text-white">{result.studentName}</div>
+                          <div className="text-sm text-gray-300">
                             {result.rollNumber} • {result.subjectName}
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
                           <div className="text-center">
-                            <div className="font-bold">{result.marks}</div>
-                            <div className="text-xs text-muted-foreground">Marks</div>
+                            <div className="font-bold text-white">{result.marks}</div>
+                            <div className="text-xs text-gray-300">Marks</div>
                           </div>
-                          <Badge variant="outline">
+                          <Badge variant="outline" className="bg-white/10 border-white/20 text-white">
                             {result.grade}
                           </Badge>
                         </div>
@@ -287,24 +291,24 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
 
           <TabsContent value="analytics" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="animate-fade-in">
+              <Card className="animate-fade-in hover-scale bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calculator className="h-5 w-5 text-primary" />
+                  <CardTitle className="flex items-center gap-2 text-white drop-shadow-lg">
+                    <Calculator className="h-5 w-5 text-cyan-400 drop-shadow-lg" />
                     Class Performance
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {mockStudents.map(student => (
-                      <div key={student.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                      <div key={student.id} className="flex items-center justify-between p-3 bg-white/10 backdrop-blur-xl rounded-lg">
                         <div>
-                          <div className="font-medium">{student.name}</div>
-                          <div className="text-sm text-muted-foreground">{student.rollNumber}</div>
+                          <div className="font-medium text-white">{student.name}</div>
+                          <div className="text-sm text-gray-300">{student.rollNumber}</div>
                         </div>
                         <div className="text-center">
-                          <div className="font-bold text-primary">{calculateGPA(student.id)}</div>
-                          <div className="text-xs text-muted-foreground">GPA</div>
+                          <div className="font-bold text-cyan-400">{calculateGPA(student.id)}</div>
+                          <div className="text-xs text-gray-300">GPA</div>
                         </div>
                       </div>
                     ))}
@@ -312,9 +316,9 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
                 </CardContent>
               </Card>
 
-              <Card className="animate-fade-in">
+              <Card className="animate-fade-in hover-scale bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
                 <CardHeader>
-                  <CardTitle>Grade Statistics</CardTitle>
+                  <CardTitle className="text-white drop-shadow-lg">Grade Statistics</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -324,12 +328,12 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
                       
                       return (
                         <div key={grade} className="flex justify-between items-center">
-                          <span>Grade {grade}</span>
+                          <span className="text-white">Grade {grade}</span>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground">{count}</span>
-                            <div className="w-20 bg-muted rounded-full h-2">
+                            <span className="text-sm text-gray-300">{count}</span>
+                            <div className="w-20 bg-white/20 rounded-full h-2">
                               <div 
-                                className="bg-primary h-2 rounded-full transition-all duration-500" 
+                                className="bg-cyan-400 h-2 rounded-full transition-all duration-500" 
                                 style={{ width: `${percentage}%` }}
                               />
                             </div>
