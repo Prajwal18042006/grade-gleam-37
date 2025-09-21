@@ -66,8 +66,8 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      <div className="absolute inset-0 bg-black/40"></div>
-      <Card className="w-full max-w-md animate-fade-in relative z-10 backdrop-blur-sm bg-background/95">
+      <div className="absolute inset-0 bg-black/50"></div>
+      <Card className="w-full max-w-md animate-fade-in relative z-10 backdrop-blur-lg bg-background/90">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
             <GraduationCap className="h-6 w-6 text-primary" />
