@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, Users } from "lucide-react";
+import loginBackground from "@/assets/login-background.jpg";
 
 interface LoginFormProps {
   onLogin: (role: 'student' | 'faculty', userData: any) => void;
@@ -56,8 +57,17 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10 p-4">
-      <Card className="w-full max-w-md animate-fade-in">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative"
+      style={{
+        backgroundImage: `url(${loginBackground})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <div className="absolute inset-0 bg-black/40"></div>
+      <Card className="w-full max-w-md animate-fade-in relative z-10 backdrop-blur-sm bg-background/95">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
             <GraduationCap className="h-6 w-6 text-primary" />
