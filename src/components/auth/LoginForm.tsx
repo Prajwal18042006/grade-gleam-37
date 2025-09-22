@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,65 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .cursor-trail {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.8) 0%, rgba(59, 130, 246, 0.6) 50%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: screen;
+        animation: cursor-pulse 2s infinite;
+        transition: all 0.1s ease-out;
+      }
+      
+      @keyframes cursor-pulse {
+        0%, 100% { transform: scale(1); opacity: 0.8; }
+        50% { transform: scale(1.5); opacity: 0.4; }
+      }
+      
+      .cursor-trail::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        animation: cursor-glow 1.5s ease-in-out infinite alternate;
+      }
+      
+      @keyframes cursor-glow {
+        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
+        100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.2; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    const trail = document.createElement('div');
+    trail.className = 'cursor-trail';
+    document.body.appendChild(trail);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      trail.style.left = e.clientX - 10 + 'px';
+      trail.style.top = e.clientY - 10 + 'px';
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      document.head.removeChild(style);
+      document.body.removeChild(trail);
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
 
   const handleSubmit = async (role: 'student' | 'faculty') => {
     setIsLoading(true);
@@ -58,7 +117,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden cursor-none"
       style={{
         backgroundImage: `url(${loginBackground})`,
         backgroundSize: 'cover',
