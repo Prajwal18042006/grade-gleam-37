@@ -21,95 +21,29 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
-      .particles-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 1;
-      }
-      
-      .particle {
-        position: absolute;
-        background: radial-gradient(circle, rgba(168, 85, 247, 0.8) 0%, rgba(59, 130, 246, 0.4) 50%, transparent 70%);
-        border-radius: 50%;
-        pointer-events: none;
-        animation: float 6s ease-in-out infinite;
-      }
-      
-      .particle:nth-child(odd) {
-        background: radial-gradient(circle, rgba(147, 51, 234, 0.6) 0%, rgba(99, 102, 241, 0.3) 50%, transparent 70%);
-        animation-delay: -2s;
-        animation-duration: 8s;
-      }
-      
-      .particle:nth-child(3n) {
-        background: radial-gradient(circle, rgba(79, 70, 229, 0.5) 0%, rgba(168, 85, 247, 0.2) 50%, transparent 70%);
-        animation-delay: -4s;
-        animation-duration: 10s;
-      }
-      
-      @keyframes float {
-        0%, 100% {
-          transform: translateY(0px) rotate(0deg);
-          opacity: 0;
-        }
-        10% {
-          opacity: 1;
-        }
-        50% {
-          transform: translateY(-100px) rotate(180deg);
-          opacity: 0.8;
-        }
-        90% {
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(-200px) rotate(360deg);
-          opacity: 0;
-        }
-      }
-      
       .cursor-trail {
         position: fixed;
-        width: 12px;
-        height: 12px;
-        background: radial-gradient(circle, rgba(168, 85, 247, 1) 0%, rgba(147, 51, 234, 0.8) 40%, transparent 70%);
+        width: 8px;
+        height: 8px;
+        background: radial-gradient(circle, rgba(34, 211, 238, 0.8) 0%, rgba(6, 182, 212, 0.4) 50%, transparent 70%);
         border-radius: 50%;
         pointer-events: none;
         z-index: 9999;
-        mix-blend-mode: screen;
         transition: all 0.1s ease-out;
-        box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(147, 51, 234, 0.4);
+        box-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
       }
       
       .glow-text {
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(168, 85, 247, 0.6), 0 0 30px rgba(147, 51, 234, 0.4);
+        text-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
       }
       
-      .card-glow {
-        box-shadow: 0 0 50px rgba(168, 85, 247, 0.3), 0 0 100px rgba(147, 51, 234, 0.2), inset 0 0 50px rgba(255, 255, 255, 0.05);
+      .card-professional {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                    0 0 0 1px rgba(34, 211, 238, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
       }
     `;
     document.head.appendChild(style);
-
-    // Create particles
-    const particlesContainer = document.createElement('div');
-    particlesContainer.className = 'particles-container';
-    document.body.appendChild(particlesContainer);
-
-    for (let i = 0; i < 30; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.width = Math.random() * 6 + 2 + 'px';
-      particle.style.height = particle.style.width;
-      particle.style.animationDelay = Math.random() * 6 + 's';
-      particle.style.animationDuration = Math.random() * 4 + 6 + 's';
-      particlesContainer.appendChild(particle);
-    }
 
     // Create cursor trail
     const trail = document.createElement('div');
@@ -117,15 +51,14 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
     document.body.appendChild(trail);
 
     const handleMouseMove = (e: MouseEvent) => {
-      trail.style.left = e.clientX - 6 + 'px';
-      trail.style.top = e.clientY - 6 + 'px';
+      trail.style.left = e.clientX - 4 + 'px';
+      trail.style.top = e.clientY - 4 + 'px';
     };
 
     document.addEventListener('mousemove', handleMouseMove);
 
     return () => {
       document.head.removeChild(style);
-      document.body.removeChild(particlesContainer);
       document.body.removeChild(trail);
       document.removeEventListener('mousemove', handleMouseMove);
     };
@@ -170,65 +103,66 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
   };
 
   return (
-    <div 
-      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden cursor-none"
-      style={{
-        backgroundImage: `url(${loginBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        filter: 'brightness(0.7) contrast(1.2) saturate(1.1)'
-      }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-purple-900/40 to-black/50"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-purple-500/20 to-indigo-900/30"></div>
-      <Card className="w-full max-w-md animate-fade-in hover-scale relative z-10 backdrop-blur-xl bg-black/70 border border-purple-400/50 card-glow">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2 text-white glow-text">
-            <GraduationCap className="h-6 w-6 text-purple-400 drop-shadow-lg" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+      <div className="absolute inset-0 bg-gradient-to-tr from-blue-950/50 via-slate-900/80 to-blue-950/50"></div>
+      <Card className="w-full max-w-md animate-fade-in hover-scale relative z-10 backdrop-blur-sm bg-slate-800/90 border border-cyan-500/20 card-professional">
+        <CardHeader className="text-center pb-8">
+          <CardTitle className="text-3xl font-semibold flex items-center justify-center gap-3 text-white mb-2">
+            <GraduationCap className="h-8 w-8 text-cyan-400" />
             Student Result Portal
           </CardTitle>
-          <CardDescription className="text-purple-200 glow-text">
+          <CardDescription className="text-slate-300 text-base">
             Access your academic results and grades
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="student" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2 bg-black/40 border border-purple-500/40">
-              <TabsTrigger value="student" className="flex items-center gap-2 text-purple-200 data-[state=active]:bg-purple-600/30 data-[state=active]:text-white font-medium glow-text">
+        <CardContent className="px-8 pb-8">
+          <Tabs defaultValue="student" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2 bg-slate-700/50 border border-slate-600/50 h-12">
+              <TabsTrigger 
+                value="student" 
+                className="flex items-center gap-2 text-slate-300 data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-100 data-[state=active]:border-cyan-400/30 font-medium h-10 transition-all duration-200"
+              >
                 <GraduationCap className="h-4 w-4" />
                 Student
               </TabsTrigger>
-              <TabsTrigger value="faculty" className="flex items-center gap-2 text-purple-200 data-[state=active]:bg-purple-600/30 data-[state=active]:text-white font-medium glow-text">
+              <TabsTrigger 
+                value="faculty" 
+                className="flex items-center gap-2 text-slate-300 data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-100 data-[state=active]:border-cyan-400/30 font-medium h-10 transition-all duration-200"
+              >
                 <Users className="h-4 w-4" />
                 Faculty
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="student" className="space-y-4">
+            <TabsContent value="student" className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="student-email" className="text-white font-medium glow-text">Email</Label>
+                <Label htmlFor="student-email" className="text-slate-200 font-medium text-sm">
+                  Email Address
+                </Label>
                 <Input
                   id="student-email"
                   type="email"
                   placeholder="student@university.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-black/30 border-purple-500/40 text-white placeholder:text-purple-300 focus:border-purple-400 focus:ring-purple-400/20"
+                  className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring-cyan-400/30 h-11 transition-all duration-200"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="student-password" className="text-white font-medium glow-text">Password</Label>
+                <Label htmlFor="student-password" className="text-slate-200 font-medium text-sm">
+                  Password
+                </Label>
                 <Input
                   id="student-password"
                   type="password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-black/30 border-purple-500/40 text-white placeholder:text-purple-300 focus:border-purple-400 focus:ring-purple-400/20"
+                  className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring-cyan-400/30 h-11 transition-all duration-200"
                 />
               </div>
               <Button 
-                className="w-full bg-purple-600/40 hover:bg-purple-600/60 text-white border border-purple-500/50 font-semibold glow-text hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300" 
+                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white border-0 font-semibold h-11 mt-6 transition-all duration-200 hover:shadow-lg hover:shadow-cyan-500/20" 
                 onClick={() => handleSubmit('student')}
                 disabled={isLoading}
               >
@@ -236,30 +170,35 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
               </Button>
             </TabsContent>
             
-            <TabsContent value="faculty" className="space-y-4">
+            <TabsContent value="faculty" className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="faculty-email" className="text-white font-medium glow-text">Email</Label>
+                <Label htmlFor="faculty-email" className="text-slate-200 font-medium text-sm">
+                  Email Address
+                </Label>
                 <Input
                   id="faculty-email"
                   type="email"
                   placeholder="faculty@university.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-black/30 border-purple-500/40 text-white placeholder:text-purple-300 focus:border-purple-400 focus:ring-purple-400/20"
+                  className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring-cyan-400/30 h-11 transition-all duration-200"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="faculty-password" className="text-white font-medium glow-text">Password</Label>
+                <Label htmlFor="faculty-password" className="text-slate-200 font-medium text-sm">
+                  Password
+                </Label>
                 <Input
                   id="faculty-password"
                   type="password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-black/30 border-purple-500/40 text-white placeholder:text-purple-300 focus:border-purple-400 focus:ring-purple-400/20"
+                  className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring-cyan-400/30 h-11 transition-all duration-200"
                 />
               </div>
               <Button 
-                className="w-full bg-purple-600/40 hover:bg-purple-600/60 text-white border border-purple-500/50 font-semibold glow-text hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300" 
+                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white border-0 font-semibold h-11 mt-6 transition-all duration-200 hover:shadow-lg hover:shadow-cyan-500/20" 
                 onClick={() => handleSubmit('faculty')}
                 disabled={isLoading}
               >
