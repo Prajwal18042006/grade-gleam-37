@@ -177,12 +177,12 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        filter: 'brightness(0.3) contrast(1.5) saturate(1.2)'
+        filter: 'brightness(0.7) contrast(1.2) saturate(1.1)'
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-900/20 to-black"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-purple-500/10 to-indigo-900/20"></div>
-      <Card className="w-full max-w-md animate-fade-in hover-scale relative z-10 backdrop-blur-xl bg-black/60 border border-purple-500/30 card-glow">
+      <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-purple-900/40 to-black/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-purple-500/20 to-indigo-900/30"></div>
+      <Card className="w-full max-w-md animate-fade-in hover-scale relative z-10 backdrop-blur-xl bg-black/70 border border-purple-400/50 card-glow">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2 text-white glow-text">
             <GraduationCap className="h-6 w-6 text-purple-400 drop-shadow-lg" />
