@@ -9,7 +9,7 @@ import { GraduationCap, Users } from "lucide-react";
 import loginBackground from "@/assets/login-background.jpg";
 
 interface LoginFormProps {
-  onLogin: (role: 'student' | 'faculty', userData: any) => void;
+  onLogin: (role: 'student' | 'faculty' | 'admin', userData: any) => void;
 }
 
 export const LoginForm = ({ onLogin }: LoginFormProps) => {
@@ -64,7 +64,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
     };
   }, []);
 
-  const handleSubmit = async (role: 'student' | 'faculty') => {
+  const handleSubmit = async (role: 'student' | 'faculty' | 'admin') => {
     setIsLoading(true);
     
     // Simulate authentication
@@ -83,6 +83,10 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
           ...(role === 'faculty' && { 
             employeeId: 'FAC001',
             department: 'Computer Science'
+          }),
+          ...(role === 'admin' && { 
+            adminId: 'ADM001',
+            department: 'Administration'
           })
         };
         
@@ -117,7 +121,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
         </CardHeader>
         <CardContent className="px-8 pb-8">
           <Tabs defaultValue="student" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 bg-slate-700/50 border border-slate-600/50 h-12">
+            <TabsList className="grid w-full grid-cols-3 bg-slate-700/50 border border-slate-600/50 h-12">
               <TabsTrigger 
                 value="student" 
                 className="flex items-center gap-2 text-slate-300 data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-100 data-[state=active]:border-cyan-400/30 font-medium h-10 transition-all duration-200"
@@ -131,6 +135,13 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
               >
                 <Users className="h-4 w-4" />
                 Faculty
+              </TabsTrigger>
+              <TabsTrigger 
+                value="admin" 
+                className="flex items-center gap-2 text-slate-300 data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-100 data-[state=active]:border-cyan-400/30 font-medium h-10 transition-all duration-200"
+              >
+                <Users className="h-4 w-4" />
+                Admin
               </TabsTrigger>
             </TabsList>
             
@@ -203,6 +214,42 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
                 disabled={isLoading}
               >
                 {isLoading ? "Signing in..." : "Sign in as Faculty"}
+              </Button>
+            </TabsContent>
+            
+            <TabsContent value="admin" className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="admin-email" className="text-slate-200 font-medium text-sm">
+                  Email Address
+                </Label>
+                <Input
+                  id="admin-email"
+                  type="email"
+                  placeholder="admin@university.edu"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring-cyan-400/30 h-11 transition-all duration-200"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="admin-password" className="text-slate-200 font-medium text-sm">
+                  Password
+                </Label>
+                <Input
+                  id="admin-password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring-cyan-400/30 h-11 transition-all duration-200"
+                />
+              </div>
+              <Button 
+                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white border-0 font-semibold h-11 mt-6 transition-all duration-200 hover:shadow-lg hover:shadow-cyan-500/20" 
+                onClick={() => handleSubmit('admin')}
+                disabled={isLoading}
+              >
+                {isLoading ? "Signing in..." : "Sign in as Admin"}
               </Button>
             </TabsContent>
           </Tabs>

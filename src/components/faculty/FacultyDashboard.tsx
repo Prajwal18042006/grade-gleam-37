@@ -320,7 +320,36 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
 
                 {/* Student Selection */}
                 <div className="space-y-3">
-                  <Label className="text-white font-medium drop-shadow-md">Select Students</Label>
+                  <div className="flex items-center justify-between">
+                    <Label className="text-white font-medium drop-shadow-md">Select Students</Label>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        if (selectedStudents.length === mockStudents.length) {
+                          // Deselect all
+                          setSelectedStudents([]);
+                          setStudentMarks({});
+                        } else {
+                          // Select all
+                          setSelectedStudents(mockStudents.map(s => s.id));
+                          const newMarks: Record<string, StudentMarkEntry> = {};
+                          mockStudents.forEach(student => {
+                            newMarks[student.id] = {
+                              studentId: student.id,
+                              marks: "",
+                              grade: "",
+                              isConfirmed: false
+                            };
+                          });
+                          setStudentMarks(newMarks);
+                        }
+                      }}
+                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    >
+                      {selectedStudents.length === mockStudents.length ? "Deselect All" : "Select All"}
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-48 overflow-y-auto bg-white/5 rounded-lg p-3 border border-white/10">
                     {mockStudents.map(student => (
                       <div key={student.id} className="flex items-center space-x-3 p-2 rounded hover:bg-white/10">
