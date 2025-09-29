@@ -6,8 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Users, BookOpen, PlusCircle, Save, Calculator, FileSpreadsheet } from "lucide-react";
+import { Users, BookOpen, PlusCircle, Save, Calculator, FileSpreadsheet, CheckCircle, AlertCircle } from "lucide-react";
 
 interface FacultyDashboardProps {
   user: any;
@@ -32,12 +34,26 @@ const gradePoints = {
   "A+": 10, "A": 9, "B+": 8, "B": 7, "C+": 6, "C": 5, "D": 4, "F": 0
 };
 
+interface StudentMarkEntry {
+  studentId: string;
+  marks: string;
+  grade: string;
+  isConfirmed: boolean;
+  error?: string;
+}
+
 export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedGrade, setSelectedGrade] = useState("");
   const [marks, setMarks] = useState("");
   const [studentResults, setStudentResults] = useState<any[]>([]);
+  
+  // Multi-student selection states
+  const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
+  const [studentMarks, setStudentMarks] = useState<Record<string, StudentMarkEntry>>({});
+  const [selectedSubjectForBatch, setSelectedSubjectForBatch] = useState("");
+  
   const { toast } = useToast();
 
   const handleSubmitResult = () => {
@@ -111,6 +127,112 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
     }
   };
 
+  // Multi-student selection functions
+  const toggleStudentSelection = (studentId: string) => {
+    setSelectedStudents(prev => {
+      if (prev.includes(studentId)) {
+        // Remove student and their marks data
+        const newSelected = prev.filter(id => id !== studentId);
+        setStudentMarks(prevMarks => {
+          const newMarks = { ...prevMarks };
+          delete newMarks[studentId];
+          return newMarks;
+        });
+        return newSelected;
+      } else {
+        // Add student with empty marks data
+        setStudentMarks(prev => ({
+          ...prev,
+          [studentId]: {
+            studentId,
+            marks: "",
+            grade: "",
+            isConfirmed: false
+          }
+        }));
+        return [...prev, studentId];
+      }
+    });
+  };
+
+  const validateMarks = (marks: string): string | undefined => {
+    if (!marks.trim()) return "Marks are required";
+    const marksNum = parseInt(marks);
+    if (isNaN(marksNum)) return "Invalid marks format";
+    if (marksNum < 0 || marksNum > 100) return "Marks must be between 0 and 100";
+    return undefined;
+  };
+
+  const handleStudentMarksChange = (studentId: string, marks: string) => {
+    const error = validateMarks(marks);
+    const grade = marks && !error ? getGradeFromMarks(parseInt(marks)) : "";
+    
+    setStudentMarks(prev => ({
+      ...prev,
+      [studentId]: {
+        ...prev[studentId],
+        marks,
+        grade,
+        error,
+        isConfirmed: false
+      }
+    }));
+  };
+
+  const confirmStudentResult = (studentId: string) => {
+    const studentData = studentMarks[studentId];
+    const student = mockStudents.find(s => s.id === studentId);
+    const subject = mockSubjects.find(s => s.id === selectedSubjectForBatch);
+    
+    if (!studentData || !student || !subject) return;
+    
+    const error = validateMarks(studentData.marks);
+    if (error) {
+      toast({
+        title: "Validation Error",
+        description: error,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newResult = {
+      id: Date.now().toString() + studentId,
+      studentId,
+      studentName: student.name,
+      rollNumber: student.rollNumber,
+      subjectId: selectedSubjectForBatch,
+      subjectName: subject.name,
+      credits: subject.credits,
+      marks: parseInt(studentData.marks),
+      grade: studentData.grade,
+      points: gradePoints[studentData.grade as keyof typeof gradePoints],
+      submittedAt: new Date().toISOString(),
+    };
+
+    setStudentResults(prev => [...prev, newResult]);
+    
+    // Mark as confirmed
+    setStudentMarks(prev => ({
+      ...prev,
+      [studentId]: {
+        ...prev[studentId],
+        isConfirmed: true
+      }
+    }));
+
+    toast({
+      title: "Result Confirmed",
+      description: `Grade ${studentData.grade} confirmed for ${student.name}`,
+    });
+  };
+
+  const clearBatchEntry = () => {
+    setSelectedStudents([]);
+    setStudentMarks({});
+    setSelectedSubjectForBatch("");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/10 to-cyan-900/20"></div>
@@ -159,22 +281,182 @@ export const FacultyDashboard = ({ user, onLogout }: FacultyDashboardProps) => {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="add-results" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-xl border border-white/20">
-            <TabsTrigger value="add-results" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">Add Results</TabsTrigger>
+        <Tabs defaultValue="batch-entry" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-4 bg-white/10 backdrop-blur-xl border border-white/20">
+            <TabsTrigger value="batch-entry" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">Batch Entry</TabsTrigger>
+            <TabsTrigger value="single-entry" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">Single Entry</TabsTrigger>
             <TabsTrigger value="view-results" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">View Results</TabsTrigger>
             <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white font-medium">Analytics</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="add-results" className="space-y-6">
+          <TabsContent value="batch-entry" className="space-y-6">
+            <Card className="animate-fade-in hover-scale bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-white drop-shadow-lg">
+                  <Users className="h-5 w-5 text-cyan-400 drop-shadow-lg" />
+                  Multiple Student Marks Entry
+                </CardTitle>
+                <CardDescription className="text-gray-300">
+                  Select multiple students and enter marks for batch processing
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Subject Selection for Batch */}
+                <div className="space-y-2">
+                  <Label className="text-white font-medium drop-shadow-md">Subject</Label>
+                  <Select value={selectedSubjectForBatch} onValueChange={setSelectedSubjectForBatch}>
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                      <SelectValue placeholder="Select subject for batch entry" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black/90 backdrop-blur-xl border-white/20">
+                      {mockSubjects.map(subject => (
+                        <SelectItem key={subject.id} value={subject.id} className="text-white hover:bg-white/10">
+                          {subject.name} ({subject.credits} credits)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Student Selection */}
+                <div className="space-y-3">
+                  <Label className="text-white font-medium drop-shadow-md">Select Students</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-48 overflow-y-auto bg-white/5 rounded-lg p-3 border border-white/10">
+                    {mockStudents.map(student => (
+                      <div key={student.id} className="flex items-center space-x-3 p-2 rounded hover:bg-white/10">
+                        <Checkbox
+                          id={`student-${student.id}`}
+                          checked={selectedStudents.includes(student.id)}
+                          onCheckedChange={() => toggleStudentSelection(student.id)}
+                          className="border-white/30 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"
+                        />
+                        <label
+                          htmlFor={`student-${student.id}`}
+                          className="text-sm text-white cursor-pointer flex-grow"
+                        >
+                          <div className="font-medium">{student.name}</div>
+                          <div className="text-xs text-gray-300">{student.rollNumber}</div>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-sm text-gray-300">
+                    {selectedStudents.length} student{selectedStudents.length !== 1 ? 's' : ''} selected
+                  </div>
+                </div>
+
+                {/* Marks Entry Table */}
+                {selectedStudents.length > 0 && selectedSubjectForBatch && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-white font-medium drop-shadow-md">Enter Marks</Label>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearBatchEntry}
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                      >
+                        Clear All
+                      </Button>
+                    </div>
+                    
+                    <div className="border border-white/20 rounded-lg overflow-hidden bg-white/5">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="border-white/20 hover:bg-white/5">
+                            <TableHead className="text-white font-medium">Roll Number</TableHead>
+                            <TableHead className="text-white font-medium">Student Name</TableHead>
+                            <TableHead className="text-white font-medium">Marks (0-100)</TableHead>
+                            <TableHead className="text-white font-medium">Grade</TableHead>
+                            <TableHead className="text-white font-medium">Action</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {selectedStudents.map(studentId => {
+                            const student = mockStudents.find(s => s.id === studentId);
+                            const markData = studentMarks[studentId];
+                            if (!student) return null;
+
+                            return (
+                              <TableRow key={studentId} className="border-white/20 hover:bg-white/5">
+                                <TableCell className="text-white font-medium">
+                                  {student.rollNumber}
+                                </TableCell>
+                                <TableCell className="text-white">
+                                  {student.name}
+                                </TableCell>
+                                <TableCell className="w-32">
+                                  <Input
+                                    type="number"
+                                    placeholder="0-100"
+                                    value={markData?.marks || ""}
+                                    onChange={(e) => handleStudentMarksChange(studentId, e.target.value)}
+                                    min="0"
+                                    max="100"
+                                    className={`bg-white/10 border-white/20 text-white placeholder:text-gray-400 ${
+                                      markData?.error ? 'border-red-400' : ''
+                                    }`}
+                                    disabled={markData?.isConfirmed}
+                                  />
+                                  {markData?.error && (
+                                    <div className="text-xs text-red-400 mt-1 flex items-center gap-1">
+                                      <AlertCircle className="h-3 w-3" />
+                                      {markData.error}
+                                    </div>
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`bg-white/10 border-white/20 text-white ${
+                                      markData?.isConfirmed ? 'bg-green-500/20 border-green-400' : ''
+                                    }`}
+                                  >
+                                    {markData?.grade || '-'}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => confirmStudentResult(studentId)}
+                                    disabled={!markData?.marks || !!markData?.error || markData?.isConfirmed}
+                                    className={`${
+                                      markData?.isConfirmed 
+                                        ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30' 
+                                        : 'bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30'
+                                    } border-0`}
+                                  >
+                                    {markData?.isConfirmed ? (
+                                      <>
+                                        <CheckCircle className="h-3 w-3 mr-1" />
+                                        Confirmed
+                                      </>
+                                    ) : (
+                                      'Confirm'
+                                    )}
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="single-entry" className="space-y-6">
             <Card className="animate-fade-in hover-scale bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white drop-shadow-lg">
                   <PlusCircle className="h-5 w-5 text-cyan-400 drop-shadow-lg" />
-                  Submit Student Results
+                  Submit Single Student Result
                 </CardTitle>
                 <CardDescription className="text-gray-300">
-                  Add marks and grades for your students
+                  Add marks and grades for individual students
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
